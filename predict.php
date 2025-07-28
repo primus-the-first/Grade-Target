@@ -53,110 +53,6 @@ if (!array_key_exists($targetClass, $classThresholds)) {
     exit;
 }
 
-// Main prediction function
-function predictClassPaths($currentCGPA, $completedCredits, $remainingCredits, $courseCreditValue,
-                          $targetClass, $maxAs, $excludeAllA, $skipCGrades, $topNResults,
-                          $gradePointsMap, $classThresholds) {
-    
-    $totalCredits = $completedCredits + $remainingCredits;
-    $totalCourses = intval($remainingCredits / $courseCreditValue);
-    $targetGPA = $classThresholds[$targetClass];
-    
-    $earnedPoints = $currentCGPA * $completedCredits;
-    $requiredTotalPoints = $targetGPA * $totalCredits;
-    $remainingPointsNeeded = $requiredTotalPoints - $earnedPoints;
-    
-    // Check if target is mathematically possible
-    if ($remainingPointsNeeded / $remainingCredits > 4.0) {
-        return ["Target class is mathematically impossible"];
-    }
-    
-    $neededAvgGPA = $remainingPointsNeeded / $remainingCredits;
-    $validCombinations = [];
-    $grades = ['A', 'B+', 'B', 'C+', 'C'];
-    
-    // Backtracking function
-    function backtrack($path, $totalPoints, $gradeCountMap, $depth, $totalCourses, 
-                     $remainingCredits, $neededAvgGPA, $courseCreditValue, $maxAs, 
-                     $skipCGrades, $gradePointsMap, $grades, &$validCombinations) {
-        
-        if ($depth === $totalCourses) {
-            $avg = $totalPoints / $remainingCredits;
-            if ($avg >= $neededAvgGPA) {
-                $validCombinations[] = $path;
-            }
-            return;
-        }
-        
-        foreach ($grades as $grade) {
-            // Apply constraints
-            if ($grade === 'A' && $maxAs !== null && ($gradeCountMap[$grade] ?? 0) >= $maxAs) {
-                continue;
-            }
-            if ($skipCGrades && $grade === 'C') {
-                continue;
-            }
-            
-            $point = $gradePointsMap[$grade];
-            $predictedPoints = $totalPoints + $point * $courseCreditValue;
-            
-            // Pruning: check if remaining courses can achieve target even with all A's
-            $maxPossiblePoints = $predictedPoints + ($totalCourses - $depth - 1) * 4.0 * $courseCreditValue;
-            if ($maxPossiblePoints / $remainingCredits < $neededAvgGPA) {
-                continue;
-            }
-            
-            $newPath = $path;
-            $newPath[] = $grade;
-            $newGradeCountMap = $gradeCountMap;
-            $newGradeCountMap[$grade] = ($newGradeCountMap[$grade] ?? 0) + 1;
-            
-            backtrack($newPath, $predictedPoints, $newGradeCountMap, $depth + 1, 
-                     $totalCourses, $remainingCredits, $neededAvgGPA, $courseCreditValue, 
-                     $maxAs, $skipCGrades, $gradePointsMap, $grades, $validCombinations);
-        }
-    }
-    
-    backtrack([], 0, [], 0, $totalCourses, $remainingCredits, $neededAvgGPA, 
-             $courseCreditValue, $maxAs, $skipCGrades, $gradePointsMap, $grades, $validCombinations);
-    
-    // Filter out all-A combinations if requested
-    if ($excludeAllA) {
-        $validCombinations = array_filter($validCombinations, function($combo) {
-            return !array_reduce($combo, function($carry, $grade) {
-                return $carry && $grade === 'A';
-            }, true);
-        });
-    }
-    
-    if (empty($validCombinations)) {
-        return ["No realistic combinations found"];
-    }
-    
-    // Sort combinations by GPA (descending) and A count (descending)
-    usort($validCombinations, function($a, $b) use ($gradePointsMap, $courseCreditValue, $remainingCredits) {
-        $gpaA = computeGPA($a, $gradePointsMap, $courseCreditValue, $remainingCredits);
-        $gpaB = computeGPA($b, $gradePointsMap, $courseCreditValue, $remainingCredits);
-        if ($gpaA != $gpaB) return $gpaB <=> $gpaA;
-        return count(array_filter($b, function($g) { return $g === 'A'; })) <=> 
-               count(array_filter($a, function($g) { return $g === 'A'; }));
-    });
-    
-    // Limit results
-    $limitedCombos = array_slice($validCombinations, 0, $topNResults);
-    
-    return array_map(function($combo) use ($gradePointsMap, $courseCreditValue, $remainingCredits) {
-        $gpa = computeGPA($combo, $gradePointsMap, $courseCreditValue, $remainingCredits);
-        $breakdown = array_count_values($combo);
-        
-        return [
-            'grades' => $combo,
-            'GPA' => round($gpa, 2),
-            'breakdown' => $breakdown
-        ];
-    }, $limitedCombos);
-}
-
 function computeGPA($combo, $gradePointsMap, $courseCreditValue, $remainingCredits) {
     $total = array_reduce($combo, function($sum, $grade) use ($gradePointsMap) {
         return $sum + $gradePointsMap[$grade];
@@ -164,12 +60,75 @@ function computeGPA($combo, $gradePointsMap, $courseCreditValue, $remainingCredi
     return $total / $remainingCredits;
 }
 
-// Execute prediction
+function predictClassPaths($currentCGPA, $completedCredits, $remainingCredits, $courseCreditValue,
+                          $targetClass, $maxAs, $excludeAllA, $skipCGrades, $topNResults,
+                          $gradePointsMap, $classThresholds) {
+
+    $totalCredits = $completedCredits + $remainingCredits;
+    $totalCourses = intval($remainingCredits / $courseCreditValue);
+    $targetGPA = $classThresholds[$targetClass];
+
+    $earnedPoints = $currentCGPA * $completedCredits;
+    $requiredTotalPoints = $targetGPA * $totalCredits;
+    $remainingPointsNeeded = $requiredTotalPoints - $earnedPoints;
+
+    if ($remainingPointsNeeded / $remainingCredits > 4.0) {
+        return ["Target class is mathematically impossible"];
+    }
+
+    $neededAvgGPA = $remainingPointsNeeded / $remainingCredits;
+
+    $grades = ['A', 'B+', 'B', 'C+', 'C'];
+    if ($skipCGrades) {
+        $grades = array_filter($grades, fn($g) => $g !== 'C');
+    }
+
+    $simulations = 10000;
+    $validCombinations = [];
+
+    for ($i = 0; $i < $simulations; $i++) {
+        $combo = [];
+        $gradeCount = [];
+
+        for ($j = 0; $j < $totalCourses; $j++) {
+            $grade = $grades[array_rand($grades)];
+
+            if ($grade === 'A' && $maxAs !== null && ($gradeCount['A'] ?? 0) >= $maxAs) {
+                $grade = $grades[array_rand($grades)];
+            }
+
+            $combo[] = $grade;
+            $gradeCount[$grade] = ($gradeCount[$grade] ?? 0) + 1;
+        }
+
+        if ($excludeAllA && count(array_unique($combo)) === 1 && $combo[0] === 'A') {
+            continue;
+        }
+
+        $gpa = computeGPA($combo, $gradePointsMap, $courseCreditValue, $remainingCredits);
+        if ($gpa >= $neededAvgGPA) {
+            $validCombinations[] = [
+                'grades' => $combo,
+                'GPA' => round($gpa, 2),
+                'breakdown' => array_count_values($combo)
+            ];
+        }
+
+        if (count($validCombinations) >= $topNResults * 5) break;
+    }
+
+    if (empty($validCombinations)) {
+        return ["No realistic combinations found"];
+    }
+
+    usort($validCombinations, fn($a, $b) => $b['GPA'] <=> $a['GPA']);
+    return array_slice($validCombinations, 0, $topNResults);
+}
+
 $results = predictClassPaths($currentCGPA, $completedCredits, $remainingCredits, $courseCreditValue,
                            $targetClass, $maxAs, $excludeAllA, $skipCGrades, $topNResults,
                            $gradePointsMap, $classThresholds);
 
-// Prepare response
 $response = [
     'success' => true,
     'results' => $results,
@@ -188,6 +147,5 @@ $response = [
     'timestamp' => date('Y-m-d H:i:s')
 ];
 
-// Output JSON response
 echo json_encode($response, JSON_PRETTY_PRINT);
 ?>
