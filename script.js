@@ -275,42 +275,164 @@ function closeModal() {
 
 function predictTargetGPA() {
     const currentCGPA = parseFloat(document.getElementById('currentCGPA').value);
+    const completedCredits = parseFloat(document.getElementById('completedCredits').value);
     const remainingCredits = parseFloat(document.getElementById('remainingCredits').value);
+    const courseCreditValue = parseFloat(document.getElementById('courseCreditValue').value) || 3;
     const targetClass = document.getElementById('targetClass').value;
+    const maxAs = document.getElementById('maxAs').value ? parseInt(document.getElementById('maxAs').value) : null;
+    const excludeAllA = document.getElementById('excludeAllA').checked;
+    const skipCGrades = document.getElementById('skipCGrades').checked;
+    const topNResults = parseInt(document.getElementById('topNResults').value) || 5;
     
-    if (!currentCGPA || !remainingCredits || !targetClass) {
-        alert('Please fill in all fields for target prediction.');
+    if (!currentCGPA || !completedCredits || !remainingCredits || !targetClass) {
+        alert('Please fill in all required fields for target prediction.');
         return;
     }
     
-    const targetRanges = {
-        'first': 3.6,
-        'second_upper': 3.0,
-        'second_lower': 2.5,
-        'third': 2.0
+    // UCC Grade Points and Class Thresholds
+    const gradePointsMap = {
+        'A': 4.0,
+        'B+': 3.5,
+        'B': 3.0,
+        'C+': 2.5,
+        'C': 2.0
     };
     
-    const targetCGPA = targetRanges[targetClass];
+    const classThresholds = {
+        'first': 3.60,
+        'second_upper': 3.00,
+        'second_lower': 2.50,
+        'third': 2.00
+    };
     
-    if (currentCGPA >= targetCGPA) {
-        showPredictionResult(`Great! You've already achieved the ${getTargetClassName(targetClass)} range. Keep maintaining your current performance!`, 'success');
+    const targetGPA = classThresholds[targetClass];
+    const totalCredits = completedCredits + remainingCredits;
+    const totalCourses = Math.floor(remainingCredits / courseCreditValue);
+    
+    const earnedPoints = currentCGPA * completedCredits;
+    const requiredTotalPoints = targetGPA * totalCredits;
+    const remainingPointsNeeded = requiredTotalPoints - earnedPoints;
+    
+    // Check if target is mathematically possible
+    if (remainingPointsNeeded / remainingCredits > 4.0) {
+        showPredictionResult("Target class is mathematically impossible with perfect grades", 'warning');
         return;
     }
     
-    // Calculate required GPA for remaining courses
-    // Formula: (currentCGPA * currentCredits + requiredGPA * remainingCredits) / totalCredits = targetCGPA
-    // Assuming current credits based on typical program structure
-    const estimatedCurrentCredits = 60; // This could be made dynamic
-    const totalCredits = estimatedCurrentCredits + remainingCredits;
-    const requiredGPA = (targetCGPA * totalCredits - currentCGPA * estimatedCurrentCredits) / remainingCredits;
+    const neededAvgGPA = remainingPointsNeeded / remainingCredits;
     
-    if (requiredGPA > 4.0) {
-        showPredictionResult(`Unfortunately, it's mathematically impossible to reach ${getTargetClassName(targetClass)} with your current CGPA and remaining credits. Consider aiming for the next achievable target.`, 'warning');
-    } else if (requiredGPA < 0) {
-        showPredictionResult(`Good news! You can achieve ${getTargetClassName(targetClass)} with any grades in your remaining courses!`, 'success');
-    } else {
-        showPredictionResult(`To achieve ${getTargetClassName(targetClass)}, you need to maintain an average GPA of <strong>${requiredGPA.toFixed(2)}</strong> in your remaining ${remainingCredits} credit hours.`, 'info');
+    // Add loading state
+    const button = document.getElementById('predictBtn');
+    button.classList.add('loading');
+    button.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Calculating Paths...';
+    
+    // Run backtracking algorithm
+    setTimeout(() => {
+        const results = predictClassPaths(
+            currentCGPA, completedCredits, remainingCredits, courseCreditValue,
+            targetClass, maxAs, excludeAllA, skipCGrades, topNResults,
+            gradePointsMap, classThresholds
+        );
+        
+        displayAdvancedPredictionResults(results, targetClass, neededAvgGPA);
+        
+        // Remove loading state
+        button.classList.remove('loading');
+        button.innerHTML = '<i class="fas fa-magic"></i> Predict Required GPA';
+    }, 100);
+}
+
+function predictClassPaths(currentCGPA, completedCredits, remainingCredits, courseCreditValue,
+                          targetClass, maxAs, excludeAllA, skipCGrades, topNResults,
+                          gradePointsMap, classThresholds) {
+    
+    const totalCredits = completedCredits + remainingCredits;
+    const totalCourses = Math.floor(remainingCredits / courseCreditValue);
+    const targetGPA = classThresholds[targetClass];
+    
+    const earnedPoints = currentCGPA * completedCredits;
+    const requiredTotalPoints = targetGPA * totalCredits;
+    const remainingPointsNeeded = requiredTotalPoints - earnedPoints;
+    const neededAvgGPA = remainingPointsNeeded / remainingCredits;
+    
+    const validCombinations = [];
+    const grades = ['A', 'B+', 'B', 'C+', 'C'];
+    
+    function backtrack(path, totalPoints, gradeCountMap, depth) {
+        if (depth === totalCourses) {
+            const avg = totalPoints / remainingCredits;
+            if (avg >= neededAvgGPA) {
+                validCombinations.push([...path]);
+            }
+            return;
+        }
+        
+        for (const grade of grades) {
+            // Apply constraints
+            if (grade === 'A' && maxAs !== null && (gradeCountMap[grade] || 0) >= maxAs) {
+                continue;
+            }
+            if (skipCGrades && grade === 'C') {
+                continue;
+            }
+            
+            const point = gradePointsMap[grade];
+            const predictedPoints = totalPoints + point * courseCreditValue;
+            
+            // Pruning: check if remaining courses can achieve target even with all A's
+            const maxPossiblePoints = predictedPoints + (totalCourses - depth - 1) * 4.0 * courseCreditValue;
+            if (maxPossiblePoints / remainingCredits < neededAvgGPA) {
+                continue;
+            }
+            
+            path.push(grade);
+            gradeCountMap[grade] = (gradeCountMap[grade] || 0) + 1;
+            backtrack(path, predictedPoints, gradeCountMap, depth + 1);
+            path.pop();
+            gradeCountMap[grade]--;
+        }
     }
+    
+    backtrack([], 0, {}, 0);
+    
+    // Filter out all-A combinations if requested
+    if (excludeAllA) {
+        validCombinations.filter(combo => !combo.every(g => g === 'A'));
+    }
+    
+    if (validCombinations.length === 0) {
+        return ["No realistic combinations found"];
+    }
+    
+    // Sort combinations by GPA (descending) and A count (descending)
+    const sortedCombos = validCombinations.sort((a, b) => {
+        const gpaA = computeGPA(a, gradePointsMap, courseCreditValue, remainingCredits);
+        const gpaB = computeGPA(b, gradePointsMap, courseCreditValue, remainingCredits);
+        if (gpaA !== gpaB) return gpaB - gpaA;
+        return b.filter(g => g === 'A').length - a.filter(g => g === 'A').length;
+    });
+    
+    // Limit results
+    const limitedCombos = sortedCombos.slice(0, topNResults);
+    
+    return limitedCombos.map(combo => {
+        const gpa = computeGPA(combo, gradePointsMap, courseCreditValue, remainingCredits);
+        const breakdown = {};
+        combo.forEach(grade => {
+            breakdown[grade] = (breakdown[grade] || 0) + 1;
+        });
+        
+        return {
+            grades: combo,
+            GPA: parseFloat(gpa.toFixed(2)),
+            breakdown: breakdown
+        };
+    });
+}
+
+function computeGPA(combo, gradePointsMap, courseCreditValue, remainingCredits) {
+    const total = combo.reduce((sum, grade) => sum + gradePointsMap[grade], 0) * courseCreditValue;
+    return total / remainingCredits;
 }
 
 function getTargetClassName(targetClass) {
