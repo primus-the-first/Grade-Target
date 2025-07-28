@@ -97,8 +97,16 @@
                         <input type="number" id="currentCGPA" step="0.01" min="0" max="4" placeholder="e.g., 3.2" class="form-input">
                     </div>
                     <div class="input-group">
+                        <label for="completedCredits">Completed Credit Hours</label>
+                        <input type="number" id="completedCredits" min="1" placeholder="e.g., 72" class="form-input">
+                    </div>
+                    <div class="input-group">
                         <label for="remainingCredits">Remaining Credit Hours</label>
-                        <input type="number" id="remainingCredits" min="1" placeholder="e.g., 24" class="form-input">
+                        <input type="number" id="remainingCredits" min="1" placeholder="e.g., 48" class="form-input">
+                    </div>
+                    <div class="input-group">
+                        <label for="courseCreditValue">Credit Value per Course</label>
+                        <input type="number" id="courseCreditValue" min="1" max="6" value="3" placeholder="3" class="form-input">
                     </div>
                     <div class="input-group">
                         <label for="targetClass">Target Class</label>
@@ -110,6 +118,40 @@
                             <option value="third">Third Class (2.0 - 2.49)</option>
                         </select>
                     </div>
+                    
+                    <!-- Advanced Options -->
+                    <div class="advanced-options">
+                        <h4 style="color: #667eea; margin: 20px 0 15px 0; font-size: 1.1rem;">
+                            <i class="fas fa-cogs"></i> Advanced Options
+                        </h4>
+                        <div class="advanced-grid">
+                            <div class="input-group">
+                                <label for="maxAs">Maximum A's Allowed</label>
+                                <input type="number" id="maxAs" min="0" placeholder="Optional limit" class="form-input">
+                            </div>
+                            <div class="input-group">
+                                <label for="topNResults">Number of Paths to Show</label>
+                                <select id="topNResults" class="form-select">
+                                    <option value="3">Top 3 Paths</option>
+                                    <option value="5" selected>Top 5 Paths</option>
+                                    <option value="10">Top 10 Paths</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="checkbox-group">
+                            <label class="checkbox-label">
+                                <input type="checkbox" id="excludeAllA" class="form-checkbox">
+                                <span class="checkbox-custom"></span>
+                                Exclude unrealistic "all A's" combinations
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="checkbox" id="skipCGrades" class="form-checkbox">
+                                <span class="checkbox-custom"></span>
+                                Avoid C grade suggestions (more ambitious paths)
+                            </label>
+                        </div>
+                    </div>
+                    
                     <button type="button" id="predictBtn" class="btn btn-accent">
                         <i class="fas fa-magic"></i> Predict Required GPA
                     </button>
