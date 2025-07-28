@@ -435,6 +435,85 @@ function computeGPA(combo, gradePointsMap, courseCreditValue, remainingCredits) 
     return total / remainingCredits;
 }
 
+function displayAdvancedPredictionResults(results, targetClass, neededAvgGPA) {
+    const resultDiv = document.getElementById('predictionResult');
+    
+    if (typeof results === 'string' || (Array.isArray(results) && typeof results[0] === 'string')) {
+        const message = Array.isArray(results) ? results[0] : results;
+        resultDiv.innerHTML = `
+            <div style="background: linear-gradient(135deg, #ff6b6b, #ffa500); color: #fff; padding: 25px; border-radius: 12px; text-align: center;">
+                <h3><i class="fas fa-exclamation-triangle"></i> ${message}</h3>
+            </div>
+        `;
+        resultDiv.classList.remove('hidden');
+        return;
+    }
+    
+    const targetClassName = getTargetClassName(targetClass);
+    
+    let resultsHTML = `
+        <div style="background: linear-gradient(135deg, #667eea, #764ba2); color: #fff; padding: 25px; border-radius: 12px; margin-bottom: 20px;">
+            <h3><i class="fas fa-route"></i> Path Analysis for ${targetClassName}</h3>
+            <p style="margin: 10px 0;"><strong>Required Average GPA:</strong> ${neededAvgGPA.toFixed(2)}</p>
+            <p style="margin: 0;"><strong>Found ${results.length} optimal path${results.length > 1 ? 's' : ''}:</strong></p>
+        </div>
+    `;
+    
+    results.forEach((result, index) => {
+        const pathColor = index === 0 ? '#00c851' : index === 1 ? '#39c0ed' : '#ffbb33';
+        
+        resultsHTML += `
+            <div style="background: #fff; border-left: 4px solid ${pathColor}; margin-bottom: 15px; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
+                <div style="background: ${pathColor}; color: #fff; padding: 15px; font-weight: 600;">
+                    <i class="fas fa-trophy"></i> Path ${index + 1} - Target GPA: ${result.GPA}
+                </div>
+                <div style="padding: 20px;">
+                    <div style="margin-bottom: 15px;">
+                        <h4 style="margin: 0 0 10px 0; color: #333;"><i class="fas fa-chart-bar"></i> Grade Breakdown:</h4>
+                        <div style="display: flex; flex-wrap: wrap; gap: 10px;">
+                            ${Object.entries(result.breakdown).map(([grade, count]) => `
+                                <span style="background: ${getGradeColor(grade)}; color: #fff; padding: 5px 12px; border-radius: 20px; font-size: 0.9rem; font-weight: 500;">
+                                    ${count}x ${grade}
+                                </span>
+                            `).join('')}
+                        </div>
+                    </div>
+                    <div>
+                        <h4 style="margin: 0 0 10px 0; color: #333;"><i class="fas fa-list"></i> Course-by-Course Plan:</h4>
+                        <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(40px, 1fr)); gap: 8px; max-width: 400px;">
+                            ${result.grades.map((grade, courseIndex) => `
+                                <div style="background: ${getGradeColor(grade)}; color: #fff; padding: 8px; border-radius: 6px; text-align: center; font-weight: 600; font-size: 0.9rem;">
+                                    ${grade}
+                                </div>
+                            `).join('')}
+                        </div>
+                        <p style="font-size: 0.9rem; color: #666; margin-top: 10px;">
+                            <i class="fas fa-info-circle"></i> ${result.grades.length} courses total
+                        </p>
+                    </div>
+                </div>
+            </div>
+        `;
+    });
+    
+    resultDiv.innerHTML = resultsHTML;
+    resultDiv.classList.remove('hidden');
+    
+    // Smooth scroll to result
+    resultDiv.scrollIntoView({ behavior: 'smooth', block: 'center' });
+}
+
+function getGradeColor(grade) {
+    const colors = {
+        'A': '#00c851',
+        'B+': '#39c0ed', 
+        'B': '#2e7aff',
+        'C+': '#ffbb33',
+        'C': '#ff8800'
+    };
+    return colors[grade] || '#666';
+}
+
 function getTargetClassName(targetClass) {
     const names = {
         'first': 'First Class',
@@ -443,27 +522,6 @@ function getTargetClassName(targetClass) {
         'third': 'Third Class'
     };
     return names[targetClass] || targetClass;
-}
-
-function showPredictionResult(message, type) {
-    const resultDiv = document.getElementById('predictionResult');
-    const colors = {
-        'success': 'linear-gradient(135deg, #00c851, #39c0ed)',
-        'warning': 'linear-gradient(135deg, #ffbb33, #ff8800)',
-        'info': 'linear-gradient(135deg, #667eea, #764ba2)'
-    };
-    
-    resultDiv.innerHTML = `
-        <div style="background: ${colors[type]}; color: #fff; padding: 25px; border-radius: 12px; text-align: center;">
-            <h3><i class="fas fa-target"></i> Prediction Result</h3>
-            <p style="font-size: 1.1rem; margin-top: 15px;">${message}</p>
-        </div>
-    `;
-    
-    resultDiv.classList.remove('hidden');
-    
-    // Smooth scroll to result
-    resultDiv.scrollIntoView({ behavior: 'smooth', block: 'center' });
 }
 
 // Add some interactive enhancements
