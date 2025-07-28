@@ -45,6 +45,11 @@ if ($uri === '/calculate.php' || $uri === '/api/calculate') {
     return true;
 }
 
+if ($uri === '/predict.php' || $uri === '/api/predict') {
+    include __DIR__ . '/predict.php';
+    return true;
+}
+
 // Handle root and default routes
 if ($uri === '/' || $uri === '/index.html') {
     include __DIR__ . '/index.html';
