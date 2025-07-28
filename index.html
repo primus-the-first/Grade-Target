@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UCC CGPA Calculator | Grade Target</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <!-- Header Section -->
+        <header class="header">
+            <div class="header-content">
+                <div class="logo">
+                    <i class="fas fa-graduation-cap"></i>
+                    <h1>Grade Target</h1>
+                </div>
+                <p class="subtitle">University of Cape Coast CGPA Calculator & Class Predictor</p>
+            </div>
+            <div class="header-decoration"></div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Course Input Section -->
+            <section class="card course-input-section">
+                <div class="section-header">
+                    <h2><i class="fas fa-book-open"></i> Course Details</h2>
+                    <p>Add your courses to calculate your CGPA</p>
+                </div>
+
+                <form id="cgpaForm" method="POST" action="calculate.php">
+                    <div class="table-container">
+                        <table id="courseTable" class="course-table">
+                            <thead>
+                                <tr>
+                                    <th><i class="fas fa-book"></i> Course Name</th>
+                                    <th><i class="fas fa-clock"></i> Credit Hours</th>
+                                    <th><i class="fas fa-star"></i> Grade</th>
+                                    <th><i class="fas fa-trash"></i> Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="courseTableBody">
+                                <tr class="course-row">
+                                    <td>
+                                        <input type="text" name="course_name[]" placeholder="e.g., Mathematics 101" class="form-input" required>
+                                    </td>
+                                    <td>
+                                        <input type="number" name="credit_hours[]" min="1" max="6" placeholder="3" class="form-input" required>
+                                    </td>
+                                    <td>
+                                        <select name="grade[]" class="form-select" required>
+                                            <option value="">Select Grade</option>
+                                            <option value="A">A (Excellent)</option>
+                                            <option value="B+">B+ (Very Good)</option>
+                                            <option value="B">B (Good)</option>
+                                            <option value="C+">C+ (Fairly Good)</option>
+                                            <option value="C">C (Average)</option>
+                                            <option value="D">D (Pass)</option>
+                                            <option value="E">E (Fail)</option>
+                                            <option value="F">F (Fail)</option>
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <button type="button" class="btn-remove" onclick="removeCourse(this)" disabled>
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="button" id="addCourseBtn" class="btn btn-secondary">
+                            <i class="fas fa-plus"></i> Add Course
+                        </button>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-calculator"></i> Calculate CGPA
+                        </button>
+                    </div>
+                </form>
+            </section>
+
+            <!-- Target Class Predictor Section -->
+            <section class="card predictor-section">
+                <div class="section-header">
+                    <h2><i class="fas fa-target"></i> Target Class Predictor</h2>
+                    <p>Plan your path to your desired class</p>
+                </div>
+
+                <div class="predictor-form">
+                    <div class="input-group">
+                        <label for="currentCGPA">Current CGPA (if known)</label>
+                        <input type="number" id="currentCGPA" step="0.01" min="0" max="4" placeholder="e.g., 3.2" class="form-input">
+                    </div>
+                    <div class="input-group">
+                        <label for="remainingCredits">Remaining Credit Hours</label>
+                        <input type="number" id="remainingCredits" min="1" placeholder="e.g., 24" class="form-input">
+                    </div>
+                    <div class="input-group">
+                        <label for="targetClass">Target Class</label>
+                        <select id="targetClass" class="form-select">
+                            <option value="">Select Target Class</option>
+                            <option value="first">First Class (3.6 - 4.0)</option>
+                            <option value="second_upper">Second Class Upper (3.0 - 3.59)</option>
+                            <option value="second_lower">Second Class Lower (2.5 - 2.99)</option>
+                            <option value="third">Third Class (2.0 - 2.49)</option>
+                        </select>
+                    </div>
+                    <button type="button" id="predictBtn" class="btn btn-accent">
+                        <i class="fas fa-magic"></i> Predict Required GPA
+                    </button>
+                </div>
+
+                <div id="predictionResult" class="prediction-result hidden"></div>
+            </section>
+
+            <!-- Grading Scale Reference -->
+            <section class="card grading-scale">
+                <div class="section-header">
+                    <h2><i class="fas fa-chart-bar"></i> UCC Grading Scale</h2>
+                    <p>Understanding the grading system</p>
+                </div>
+
+                <div class="grade-grid">
+                    <div class="grade-item grade-a">
+                        <div class="grade-letter">A</div>
+                        <div class="grade-info">
+                            <span class="grade-point">4.0</span>
+                            <span class="grade-desc">Excellent</span>
+                        </div>
+                    </div>
+                    <div class="grade-item grade-b-plus">
+                        <div class="grade-letter">B+</div>
+                        <div class="grade-info">
+                            <span class="grade-point">3.5</span>
+                            <span class="grade-desc">Very Good</span>
+                        </div>
+                    </div>
+                    <div class="grade-item grade-b">
+                        <div class="grade-letter">B</div>
+                        <div class="grade-info">
+                            <span class="grade-point">3.0</span>
+                            <span class="grade-desc">Good</span>
+                        </div>
+                    </div>
+                    <div class="grade-item grade-c-plus">
+                        <div class="grade-letter">C+</div>
+                        <div class="grade-info">
+                            <span class="grade-point">2.5</span>
+                            <span class="grade-desc">Fairly Good</span>
+                        </div>
+                    </div>
+                    <div class="grade-item grade-c">
+                        <div class="grade-letter">C</div>
+                        <div class="grade-info">
+                            <span class="grade-point">2.0</span>
+                            <span class="grade-desc">Average</span>
+                        </div>
+                    </div>
+                    <div class="grade-item grade-d">
+                        <div class="grade-letter">D</div>
+                        <div class="grade-info">
+                            <span class="grade-point">1.0</span>
+                            <span class="grade-desc">Pass</span>
+                        </div>
+                    </div>
+                    <div class="grade-item grade-f">
+                        <div class="grade-letter">E/F</div>
+                        <div class="grade-info">
+                            <span class="grade-point">0.0</span>
+                            <span class="grade-desc">Fail</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Class Classifications Reference -->
+            <section class="card class-info">
+                <div class="section-header">
+                    <h2><i class="fas fa-trophy"></i> Class Classifications</h2>
+                    <p>CGPA ranges for different degree classes</p>
+                </div>
+
+                <div class="class-grid">
+                    <div class="class-item first-class">
+                        <div class="class-icon"><i class="fas fa-crown"></i></div>
+                        <div class="class-name">First Class</div>
+                        <div class="class-range">3.6 - 4.0</div>
+                    </div>
+                    <div class="class-item second-upper">
+                        <div class="class-icon"><i class="fas fa-medal"></i></div>
+                        <div class="class-name">Second Class Upper</div>
+                        <div class="class-range">3.0 - 3.59</div>
+                    </div>
+                    <div class="class-item second-lower">
+                        <div class="class-icon"><i class="fas fa-award"></i></div>
+                        <div class="class-name">Second Class Lower</div>
+                        <div class="class-range">2.5 - 2.99</div>
+                    </div>
+                    <div class="class-item third-class">
+                        <div class="class-icon"><i class="fas fa-certificate"></i></div>
+                        <div class="class-name">Third Class</div>
+                        <div class="class-range">2.0 - 2.49</div>
+                    </div>
+                    <div class="class-item pass">
+                        <div class="class-icon"><i class="fas fa-check"></i></div>
+                        <div class="class-name">Pass</div>
+                        <div class="class-range">1.0 - 1.99</div>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <!-- Result Modal -->
+        <div id="resultModal" class="modal hidden">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2><i class="fas fa-chart-pie"></i> Your CGPA Results</h2>
+                    <button class="modal-close" onclick="closeModal()">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <div id="modalResults"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
