@@ -289,6 +289,52 @@ function predictTargetGPA() {
         return;
     }
     
+    // Add loading state
+    const button = document.getElementById('predictBtn');
+    button.classList.add('loading');
+    button.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Calculating Paths...';
+    
+    // Prepare form data for PHP
+    const formData = new FormData();
+    formData.append('current_cgpa', currentCGPA);
+    formData.append('completed_credits', completedCredits);
+    formData.append('remaining_credits', remainingCredits);
+    formData.append('course_credit_value', courseCreditValue);
+    formData.append('target_class', targetClass);
+    if (maxAs !== null) formData.append('max_as', maxAs);
+    formData.append('exclude_all_a', excludeAllA);
+    formData.append('skip_c_grades', skipCGrades);
+    formData.append('top_n_results', topNResults);
+    
+    // Call PHP backend
+    fetch('predict.php', {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            displayAdvancedPredictionResults(data.results, targetClass, data.neededAvgGPA);
+        } else {
+            showErrorMessage(data.error || 'Failed to calculate predictions');
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        // Fallback to client-side calculation
+        calculateClientSide(currentCGPA, completedCredits, remainingCredits, courseCreditValue,
+                           targetClass, maxAs, excludeAllA, skipCGrades, topNResults);
+    })
+    .finally(() => {
+        // Remove loading state
+        button.classList.remove('loading');
+        button.innerHTML = '<i class="fas fa-magic"></i> Predict Required GPA';
+    });
+}
+
+function calculateClientSide(currentCGPA, completedCredits, remainingCredits, courseCreditValue,
+                            targetClass, maxAs, excludeAllA, skipCGrades, topNResults) {
+    
     // UCC Grade Points and Class Thresholds
     const gradePointsMap = {
         'A': 4.0,
@@ -315,31 +361,30 @@ function predictTargetGPA() {
     
     // Check if target is mathematically possible
     if (remainingPointsNeeded / remainingCredits > 4.0) {
-        showPredictionResult("Target class is mathematically impossible with perfect grades", 'warning');
+        displayAdvancedPredictionResults(["Target class is mathematically impossible"], targetClass, 0);
         return;
     }
     
     const neededAvgGPA = remainingPointsNeeded / remainingCredits;
     
-    // Add loading state
-    const button = document.getElementById('predictBtn');
-    button.classList.add('loading');
-    button.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Calculating Paths...';
+    const results = predictClassPaths(
+        currentCGPA, completedCredits, remainingCredits, courseCreditValue,
+        targetClass, maxAs, excludeAllA, skipCGrades, topNResults,
+        gradePointsMap, classThresholds
+    );
     
-    // Run backtracking algorithm
-    setTimeout(() => {
-        const results = predictClassPaths(
-            currentCGPA, completedCredits, remainingCredits, courseCreditValue,
-            targetClass, maxAs, excludeAllA, skipCGrades, topNResults,
-            gradePointsMap, classThresholds
-        );
-        
-        displayAdvancedPredictionResults(results, targetClass, neededAvgGPA);
-        
-        // Remove loading state
-        button.classList.remove('loading');
-        button.innerHTML = '<i class="fas fa-magic"></i> Predict Required GPA';
-    }, 100);
+    displayAdvancedPredictionResults(results, targetClass, neededAvgGPA);
+}
+
+function showErrorMessage(message) {
+    const resultDiv = document.getElementById('predictionResult');
+    resultDiv.innerHTML = `
+        <div style="background: linear-gradient(135deg, #ff6b6b, #ffa500); color: #fff; padding: 25px; border-radius: 12px; text-align: center;">
+            <h3><i class="fas fa-exclamation-triangle"></i> Error</h3>
+            <p style="font-size: 1.1rem; margin-top: 15px;">${message}</p>
+        </div>
+    `;
+    resultDiv.classList.remove('hidden');
 }
 
 function predictClassPaths(currentCGPA, completedCredits, remainingCredits, courseCreditValue,
