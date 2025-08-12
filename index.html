@@ -289,14 +289,14 @@
                                     <td class="py-4 px-5">
                                         <select name="grade[]" class="form-select block w-full" required>
                                             <option value="">Select Grade</option>
-                                            <option value="A">A (4.0)</option>
-                                            <option value="B+">B+ (3.5)</option>
-                                            <option value="B">B (3.0)</option>
-                                            <option value="C+">C+ (2.5)</option>
-                                            <option value="C">C (2.0)</option>
-                                            <option value="D">D (1.0)</option>
-                                            <option value="E">E (0.0)</option>
-                                            <option value="F">F (0.0)</option>
+                                            <option value="A">A (Excellent)</option>
+                                            <option value="B+">B+ (Very Good)</option>
+                                            <option value="B">B (Good)</option>
+                                            <option value="C+">C+ (Fairly Good)</option>
+                                            <option value="C">C (Average)</option>
+                                            <option value="D">D (Pass)</option>
+                                            <option value="E">E (Fail)</option>
+                                            <option value="F">F (Fail)</option>
                                         </select>
                                     </td>
                                     <td class="py-4 px-5">
@@ -337,27 +337,21 @@
                         <input type="number" id="completedCredits" min="0" placeholder="e.g., 72" class="form-input block w-full">
                     </div>
                     <div class="input-group">
-                        <label for="remainingCourses" class="block text-gray-700 text-base font-medium mb-2">Remaining Courses</label>
-                        <input type="number" id="remainingCourses" min="0" placeholder="e.g., 12" class="form-input block w-full">
+                        <label for="remainingCredits">Remaining Credit Hours</label>
+                        <input type="number" id="remainingCredits" min="1" placeholder="e.g., 48" class="form-input">
                     </div>
                     <div class="input-group">
-                        <label for="programType" class="block text-gray-700 text-base font-medium mb-2">Program Length</label>
-                        <select id="programType" class="form-select block w-full">
-                            <option value="4-year">4-Year Program</option>
-                            <option value="6-year">6-Year Program</option>
-                        </select>
+                        <label for="courseCreditValue">Credit Value per Course</label>
+                        <input type="number" id="courseCreditValue" min="1" max="6" value="3" placeholder="3" class="form-input">
                     </div>
-                    <!-- New: Desired Target Class input -->
-                    <div class="input-group col-span-1 md:col-span-2">
-                        <label for="targetClass" class="block text-gray-700 text-base font-medium mb-2">Desired Target Class</label>
-                        <select id="targetClass" class="form-select block w-full">
-                            <option value="Any Attainable Class">Any Attainable Class (Show All)</option>
-                            <option value="First Class Honours">First Class Honours (3.55 - 4.00)</option>
-                            <option value="Second Class (Upper Division)">Second Class Upper (2.95 - 3.54)</option>
-                            <option value="Second Class (Lower Division)">Second Class Lower (2.45 - 2.94)</option>
-                            <option value="Third Class Division">Third Class Division (1.95 - 2.44)</option>
-                            <option value="Pass">Pass (1.00 - 1.94)</option>
-                            <option value="Fail">Fail (0.00 - 0.99)</option>
+                    <div class="input-group">
+                        <label for="targetClass">Target Class</label>
+                        <select id="targetClass" class="form-select">
+                            <option value="">Select Target Class</option>
+                            <option value="first">First Class (3.6 - 4.0)</option>
+                            <option value="second_upper">Second Class Upper (3.0 - 3.59)</option>
+                            <option value="second_lower">Second Class Lower (2.5 - 2.99)</option>
+                            <option value="third">Third Class (2.0 - 2.49)</option>
                         </select>
                     </div>
                     <div class="input-group col-span-1 md:col-span-2">
@@ -382,333 +376,121 @@
                         <i class="fas fa-heart mr-3"></i> Get Motivational Boost ✨
                     </button>
                 </div>
-                
-                <div id="predictionResult" class="prediction-result hidden mt-10 p-6 bg-blue-50 rounded-lg border border-blue-200 text-gray-800">
-                    <!-- Prediction results will be displayed here -->
-                </div>
 
+                <div id="predictionResult" class="prediction-result hidden"></div>
             </section>
 
             <!-- Grading Scale Reference -->
-            <section class="card bg-white p-6 rounded-lg shadow-md">
-                <div class="section-header mb-8 text-center">
-                    <h2 class="text-3xl font-semibold text-gray-800 mb-3"><i class="fas fa-list-ul text-indigo-500 mr-3"></i> Grading Scale</h2>
-                    <p class="text-gray-600 text-lg">Understand the grades and their equivalent points</p>
+            <section class="card grading-scale">
+                <div class="section-header">
+                    <h2><i class="fas fa-chart-bar"></i> UCC Grading Scale</h2>
+                    <p>Understanding the grading system</p>
                 </div>
-                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-                    <div class="grade-item p-5 text-center">
-                        <h4 class="font-bold text-2xl text-green-600">A</h4>
-                        <p class="text-xl text-gray-600">4.0</p>
+
+                <div class="grade-grid">
+                    <div class="grade-item grade-a">
+                        <div class="grade-letter">A</div>
+                        <div class="grade-info">
+                            <span class="grade-point">4.0</span>
+                            <span class="grade-desc">Excellent</span>
+                        </div>
                     </div>
-                    <div class="grade-item p-5 text-center">
-                        <h4 class="font-bold text-2xl text-blue-600">B+</h4>
-                        <p class="text-xl text-gray-600">3.5</p>
+                    <div class="grade-item grade-b-plus">
+                        <div class="grade-letter">B+</div>
+                        <div class="grade-info">
+                            <span class="grade-point">3.5</span>
+                            <span class="grade-desc">Very Good</span>
+                        </div>
                     </div>
-                    <div class="grade-item p-5 text-center">
-                        <h4 class="font-bold text-2xl text-cyan-500">B</h4>
-                        <p class="text-xl text-gray-600">3.0</p>
+                    <div class="grade-item grade-b">
+                        <div class="grade-letter">B</div>
+                        <div class="grade-info">
+                            <span class="grade-point">3.0</span>
+                            <span class="grade-desc">Good</span>
+                        </div>
                     </div>
-                    <div class="grade-item p-5 text-center">
-                        <h4 class="font-bold text-2xl text-yellow-500">C+</h4>
-                        <p class="text-xl text-gray-600">2.5</p>
+                    <div class="grade-item grade-c-plus">
+                        <div class="grade-letter">C+</div>
+                        <div class="grade-info">
+                            <span class="grade-point">2.5</span>
+                            <span class="grade-desc">Fairly Good</span>
+                        </div>
                     </div>
-                    <div class="grade-item p-5 text-center">
-                        <h4 class="font-bold text-2xl text-orange-500">C</h4>
-                        <p class="text-xl text-gray-600">2.0</p>
+                    <div class="grade-item grade-c">
+                        <div class="grade-letter">C</div>
+                        <div class="grade-info">
+                            <span class="grade-point">2.0</span>
+                            <span class="grade-desc">Average</span>
+                        </div>
                     </div>
-                    <div class="grade-item p-5 text-center">
-                        <h4 class="font-bold text-2xl text-red-500">D</h4>
-                        <p class="text-xl text-gray-600">1.0</p>
+                    <div class="grade-item grade-d">
+                        <div class="grade-letter">D</div>
+                        <div class="grade-info">
+                            <span class="grade-point">1.0</span>
+                            <span class="grade-desc">Pass</span>
+                        </div>
                     </div>
-                    <div class="grade-item p-5 text-center">
-                        <h4 class="font-bold text-2xl text-pink-500">E/F</h4>
-                        <p class="text-xl text-gray-600">0.0</p>
+                    <div class="grade-item grade-f">
+                        <div class="grade-letter">E/F</div>
+                        <div class="grade-info">
+                            <span class="grade-point">0.0</span>
+                            <span class="grade-desc">Fail</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Class Classifications Reference -->
+            <section class="card class-info">
+                <div class="section-header">
+                    <h2><i class="fas fa-trophy"></i> Class Classifications</h2>
+                    <p>CGPA ranges for different degree classes</p>
+                </div>
+
+                <div class="class-grid">
+                    <div class="class-item first-class">
+                        <div class="class-icon"><i class="fas fa-crown"></i></div>
+                        <div class="class-name">First Class</div>
+                        <div class="class-range">3.6 - 4.0</div>
+                    </div>
+                    <div class="class-item second-upper">
+                        <div class="class-icon"><i class="fas fa-medal"></i></div>
+                        <div class="class-name">Second Class Upper</div>
+                        <div class="class-range">3.0 - 3.59</div>
+                    </div>
+                    <div class="class-item second-lower">
+                        <div class="class-icon"><i class="fas fa-award"></i></div>
+                        <div class="class-name">Second Class Lower</div>
+                        <div class="class-range">2.5 - 2.99</div>
+                    </div>
+                    <div class="class-item third-class">
+                        <div class="class-icon"><i class="fas fa-certificate"></i></div>
+                        <div class="class-name">Third Class</div>
+                        <div class="class-range">2.0 - 2.49</div>
+                    </div>
+                    <div class="class-item pass">
+                        <div class="class-icon"><i class="fas fa-check"></i></div>
+                        <div class="class-name">Pass</div>
+                        <div class="class-range">1.0 - 1.99</div>
                     </div>
                 </div>
             </section>
         </main>
-    </div>
 
-    <!-- The Modal for the Motivational Boost -->
-    <div id="geminiModal" class="modal fixed inset-0 flex items-center justify-center p-4 z-50 hidden">
-        <div class="modal-content w-full max-w-xl mx-auto p-6 relative">
-            <button class="modal-close absolute top-4 right-6 text-white text-3xl leading-none">&times;</button>
-            <div class="modal-header text-center p-6 mb-6">
-                <h3 id="modalTitle" class="text-3xl font-bold text-white">Motivational Boost</h3>
-            </div>
-            <div id="modalBody" class="p-6 text-gray-700 text-lg space-y-4">
-                <!-- Content will be injected here -->
-            </div>
-            <div class="flex justify-center p-6">
-                <button class="btn-primary px-6 py-2 text-white font-semibold rounded-lg shadow-md" onclick="document.getElementById('geminiModal').classList.add('hidden')">Close</button>
+        <!-- Result Modal -->
+        <div id="resultModal" class="modal hidden">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2><i class="fas fa-chart-pie"></i> Your CGPA Results</h2>
+                    <button class="modal-close" onclick="closeModal()">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <div id="modalResults"></div>
+                </div>
             </div>
         </div>
     </div>
-    
-    <script>
-        // Mapping of grades to points
-        const gradePointsMap = {
-            'A': 4.0, 'B+': 3.5, 'B': 3.0, 'C+': 2.5, 'C': 2.0, 'D': 1.0, 'E': 0.0, 'F': 0.0
-        };
 
-        // Function to determine class designation with specific rounding rules (to match PHP)
-        function getRoundedClassDesignation(cgpa) {
-            if (cgpa >= 3.55) return "First Class Honours";
-            if (cgpa >= 2.95) return "Second Class (Upper Division)";
-            if (cgpa >= 2.45) return "Second Class (Lower Division)";
-            if (cgpa >= 1.95) return "Third Class Division";
-            if (cgpa >= 1.00) return "Pass";
-            return "Fail";
-        }
-        
-        // --- Course Input Section Logic ---
-        document.getElementById('addCourseBtn').addEventListener('click', () => {
-            const tableBody = document.getElementById('courseTableBody');
-            const newRow = tableBody.querySelector('.course-row').cloneNode(true);
-            const inputs = newRow.querySelectorAll('input, select');
-            inputs.forEach(input => {
-                input.value = '';
-            });
-            newRow.querySelector('.btn-remove').disabled = false;
-            tableBody.appendChild(newRow);
-        });
-
-        function removeCourse(button) {
-            const row = button.closest('tr');
-            row.remove();
-        }
-
-        document.getElementById('cgpaForm').addEventListener('submit', function(event) {
-            event.preventDefault();
-            
-            const rows = this.querySelectorAll('.course-row');
-            let totalCreditHours = 0;
-            let totalGradePoints = 0;
-
-            rows.forEach(row => {
-                const creditHours = parseInt(row.querySelector('input[name="credit_hours[]"]').value);
-                const grade = row.querySelector('select[name="grade[]"]').value;
-
-                if (creditHours && grade && gradePointsMap[grade] !== undefined) {
-                    totalCreditHours += creditHours;
-                    totalGradePoints += creditHours * gradePointsMap[grade];
-                }
-            });
-
-            const currentCGPA = totalCreditHours > 0 ? totalGradePoints / totalCreditHours : 0;
-            const currentClass = getRoundedClassDesignation(currentCGPA);
-
-            // Display the results
-            const resultDiv = document.getElementById('predictionResult');
-            resultDiv.innerHTML = `
-                <h3 class="text-2xl font-semibold text-center mb-4">Your Current CGPA</h3>
-                <div class="text-center text-xl space-y-2">
-                    <p>Current CGPA: <span class="font-bold text-indigo-600">${currentCGPA.toFixed(2)}</span></p>
-                    <p>Current Class: <span class="font-bold text-indigo-600">${currentClass}</span></p>
-                </div>
-            `;
-            resultDiv.classList.remove('hidden');
-        });
-
-        // --- Class Predictor Section Logic ---
-        document.getElementById('predictBtn').addEventListener('click', async () => {
-            const currentCGPA = parseFloat(document.getElementById('currentCGPA').value);
-            const completedCredits = parseInt(document.getElementById('completedCredits').value);
-            const remainingCourses = parseInt(document.getElementById('remainingCourses').value);
-            const targetClass = document.getElementById('targetClass').value;
-            const numPathsToShow = parseInt(document.getElementById('topNResults').value);
-
-            // Simple validation
-            if (isNaN(currentCGPA) || isNaN(completedCredits) || isNaN(remainingCourses) || currentCGPA < 0 || currentCGPA > 4 || completedCredits < 0 || remainingCourses < 0) {
-                showModal('Prediction Error', 'Please enter valid numbers for all fields.');
-                return;
-            }
-            
-            await callPredictorAPI({
-                current_cgpa: currentCGPA,
-                completed_credits: completedCredits,
-                remaining_courses: remainingCourses,
-                target_class: targetClass,
-                num_paths_to_show: numPathsToShow
-            });
-        });
-
-        async function callPredictorAPI(data) {
-            const predictionResultDiv = document.getElementById('predictionResult');
-            predictionResultDiv.innerHTML = '<div class="loading-spinner"></div>';
-            predictionResultDiv.classList.remove('hidden');
-
-            const payload = new URLSearchParams({
-                ...data,
-                request_type: 'predict'
-            });
-
-            try {
-                const response = await fetch('predict.php', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                    body: payload
-                });
-
-                if (!response.ok) {
-                    throw new Error(`HTTP error! Status: ${response.status}`);
-                }
-
-                const result = await response.json();
-                
-                if (result.success) {
-                    displayPredictionResults(result);
-                } else {
-                    showModal('Prediction Error', result.error);
-                    predictionResultDiv.classList.add('hidden');
-                }
-
-            } catch (error) {
-                console.error('Fetch error:', error);
-                showModal('Network Error', 'Failed to connect to the prediction service. Please try again.');
-                predictionResultDiv.classList.add('hidden');
-            }
-        }
-        
-        function displayPredictionResults(data) {
-            const resultDiv = document.getElementById('predictionResult');
-            let html = '';
-
-            // Handle the case where no combinations were found
-            if (data.status === 'no_combinations_found') {
-                html = `
-                    <div class="text-center space-y-4">
-                        <h3 class="text-2xl font-semibold text-red-600 mb-2">No Realistic Combinations Found</h3>
-                        <p class="text-lg">${data.message}</p>
-                    </div>
-                `;
-            } else {
-                const summary = data.initial_summary;
-                html += `
-                    <div class="text-center mb-8">
-                        <h3 class="text-2xl font-semibold text-gray-800 mb-4">Your Class Path Prediction</h3>
-                        <p class="text-lg text-gray-600">
-                            Current CGPA: <span class="font-bold text-indigo-600">${summary.current_cgpa}</span> (${summary.current_class})
-                        </p>
-                        <p class="text-lg text-gray-600">
-                            Credits: ${summary.credits_completed} completed, ${summary.credits_remaining} remaining
-                        </p>
-                        <p class="text-lg text-gray-600">
-                            Highest Attainable Class: <span class="font-bold text-emerald-600">${summary.highest_attainable_class}</span> (Final CGPA: ${summary.max_possible_final_cgpa})
-                        </p>
-                    </div>
-                    <div id="scenariosContainer">
-                        ${Object.entries(data.grade_combinations_by_class).map(([className, paths]) => {
-                            let classHtml = `<h4 class="text-xl font-bold text-indigo-700 mb-4">${className} Scenarios</h4>`;
-                            classHtml += `<div class="space-y-6">`;
-                            paths.forEach(path => {
-                                const finalCGPA = parseFloat(path.overall_final_cgpa_with_this_distribution);
-                                const finalClass = getRoundedClassDesignation(finalCGPA);
-                                const gradeDistHtml = Object.entries(path.distribution).map(([grade, count]) => `${count}x ${grade}`).join(', ');
-                                
-                                classHtml += `
-                                    <div class="p-4 bg-gray-50 rounded-lg shadow-sm border border-gray-200">
-                                        <p class="text-lg font-semibold text-gray-800">
-                                            Final CGPA: <span class="text-blue-600">${finalCGPA.toFixed(2)}</span>
-                                            <span class="text-sm text-gray-500 ml-2">(${finalClass})</span>
-                                        </p>
-                                        <p class="text-md text-gray-700 mt-1">
-                                            Grades needed in remaining courses:
-                                            <span class="font-medium text-purple-600">${gradeDistHtml}</span>
-                                        </p>
-                                    </div>
-                                `;
-                            });
-                            classHtml += `</div>`;
-                            return classHtml;
-                        }).join('')}
-                    </div>
-                `;
-            }
-            
-            resultDiv.innerHTML = html;
-        }
-
-        // --- Gemini API Logic for Motivational Boost ---
-        document.getElementById('getMotivationalBoostBtn').addEventListener('click', async () => {
-            const currentCGPA = parseFloat(document.getElementById('currentCGPA').value);
-            const completedCredits = parseInt(document.getElementById('completedCredits').value);
-            const remainingCourses = parseInt(document.getElementById('remainingCourses').value);
-            const programType = document.getElementById('programType').value;
-            const creditsPerCourse = 3; // Assuming a standard 3 credit hours per course
-            const totalCredits = completedCredits + (remainingCourses * creditsPerCourse);
-            const currentClass = getRoundedClassDesignation(currentCGPA);
-
-            const highestPossibleCGPA = (currentCGPA * completedCredits + 4.0 * (remainingCourses * creditsPerCourse)) / totalCredits;
-            const highestPossibleClass = getRoundedClassDesignation(highestPossibleCGPA);
-
-            const prompt = `Write a short, encouraging, and motivational message for a University of Cape Coast student.
-            Their current CGPA is ${currentCGPA.toFixed(2)} (${currentClass}).
-            They have ${remainingCourses} courses remaining in their ${programType} program.
-            Their highest possible attainable class is ${highestPossibleClass}.
-            Focus on perseverance, smart work, and the potential for success. Keep it concise, around 2-3 paragraphs.`;
-            
-            await callGeminiAPI(prompt, 'Motivational Boost');
-        });
-
-        // Re-usable function to call the Gemini API for any prompt
-        async function callGeminiAPI(prompt, modalTitle) {
-            const modal = document.getElementById('geminiModal');
-            const modalBody = document.getElementById('modalBody');
-            const titleElement = document.getElementById('modalTitle');
-            
-            titleElement.textContent = modalTitle;
-            modalBody.innerHTML = '<div class="loading-spinner"></div>';
-            modal.classList.remove('hidden');
-
-            const payload = new URLSearchParams({
-                prompt: prompt,
-                request_type: 'gemini_ai'
-            });
-
-            try {
-                const response = await fetch('predict.php', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                    body: payload
-                });
-
-                if (!response.ok) {
-                    throw new Error(`HTTP error! Status: ${response.status}`);
-                }
-
-                const result = await response.json();
-                
-                if (result.success) {
-                    modalBody.innerHTML = `<p>${result.text.replace(/\n/g, '<br>')}</p>`;
-                } else {
-                    modalBody.innerHTML = `<p class="text-red-600">Error: ${result.error}</p>`;
-                }
-
-            } catch (error) {
-                console.error('Fetch error:', error);
-                modalBody.innerHTML = `<p class="text-red-600">Failed to get a response. Please check your network connection.</p>`;
-            }
-        }
-        
-        // --- Modal Logic ---
-        function showModal(title, message) {
-            const modal = document.getElementById('geminiModal');
-            document.getElementById('modalTitle').textContent = title;
-            document.getElementById('modalBody').innerHTML = `<p>${message}</p>`;
-            modal.classList.remove('hidden');
-        }
-
-        document.querySelector('.modal-close').addEventListener('click', () => {
-            document.getElementById('geminiModal').classList.add('hidden');
-        });
-        
-        window.onclick = function(event) {
-            const modal = document.getElementById('geminiModal');
-            if (event.target === modal) {
-                modal.classList.add('hidden');
-            }
-        }
-    </script>
+    <script src="script.js"></script>
 </body>
 </html>
