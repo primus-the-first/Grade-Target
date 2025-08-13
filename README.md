@@ -1,284 +1,58 @@
-# 🎓 Grade Target - UCC CGPA Calculator
+# 🎓 Grade Target - UCC CGPA Calculator & AI Tutor
 
-> **A visually stunning CGPA calculator and class predictor designed specifically for University of Cape Coast (UCC) students**
-
-![Grade Target Banner](https://via.placeholder.com/800x200/667eea/ffffff?text=Grade+Target+-+UCC+CGPA+Calculator)
+> **A visually stunning CGPA calculator, class predictor, and AI-powered study assistant designed specifically for University of Cape Coast (UCC) students**
 
 ## ✨ Features
 
-### 🎯 **Core Functionality**
-- **Dynamic Course Input**: Add/remove courses with smooth animations
-- **Real-time CGPA Calculation**: Instant results using UCC grading scale
-- **Class Classification**: Automatic degree class determination
-- **Target Class Predictor**: Calculate required GPA for desired class
-- **Course Breakdown**: Detailed analysis of each course contribution
+### 🎯 **CGPA Calculator & Predictor**
+- **Dynamic Course Input**: Add or remove courses as needed.
+- **Real-time CGPA Calculation**: Instantly see your CGPA based on the official UCC grading scale.
+- **Class Prediction**: See your current class and predict what you need for your desired class.
 
-### 🎨 **Visual Appeal**
-- **Modern Design**: Gradient backgrounds and card-based layout
-- **Responsive**: Perfect on desktop, tablet, and mobile devices
-- **Interactive Animations**: Smooth transitions and hover effects
-- **Color-coded Results**: Visual feedback for different grade classifications
-- **Beautiful Typography**: Clean, readable fonts throughout
+### 🤖 **AI Tutor**
+- **Interactive Study Assistance**: Ask any study-related question and get a detailed answer from an AI tutor.
+- **Customizable Learning Levels**: Tailor the AI's response to your level of understanding using Bloom's Taxonomy.
+- **Context-Aware Answers**: Upload a text file with study materials to get answers specific to your course content.
 
-### 📊 **UCC Grading System**
-| Grade | Grade Point | Description |
-|-------|-------------|-------------|
-| A     | 4.0         | Excellent   |
-| B+    | 3.5         | Very Good   |
-| B     | 3.0         | Good        |
-| C+    | 2.5         | Fairly Good |
-| C     | 2.0         | Average     |
-| D     | 1.0         | Pass        |
-| E/F   | 0.0         | Fail        |
+## 🚀 How to Use
 
-### 🏆 **Class Classifications**
-| Class | CGPA Range | Achievement |
-|-------|------------|-------------|
-| **First Class** | 3.6 - 4.0 | 👑 Outstanding |
-| **Second Class Upper** | 3.0 - 3.59 | 🥇 Excellent |
-| **Second Class Lower** | 2.5 - 2.99 | 🥈 Good |
-| **Third Class** | 2.0 - 2.49 | 🥉 Satisfactory |
-| **Pass** | 1.0 - 1.99 | ✅ Minimum |
-| **Fail** | 0.0 - 0.99 | ❌ Below Standard |
+### **CGPA Calculator**
+1.  **Add Courses**: Click the "Add Course" button to add a new course row.
+2.  **Enter Details**: For each course, enter the course name, credit hours, and your grade.
+3.  **Calculate**: Click the "Calculate CGPA" button to see your current CGPA and class.
 
-## 🚀 Quick Start
+### **Class Predictor**
+1.  **Enter Current Stats**: Input your current CGPA and the number of credit hours you have completed.
+2.  **Set Your Goal**: Enter the number of courses you have remaining and select your desired class.
+3.  **Predict**: Click "Predict My Class Paths" to see the grades you need to achieve your goal.
 
-### Option 1: PHP Built-in Server (Recommended)
-```bash
-# Navigate to project directory
-cd /app
+### **AI Tutor**
+1.  **Ask a Question**: Navigate to the `tutor.html` page and type your question into the text area.
+2.  **Set Learning Level**: Choose a learning level from the dropdown to specify how detailed you want the answer to be.
+3.  **Provide Context (Optional)**: Upload a `.txt` file containing notes or other study materials for a more specific answer.
+4.  **Generate Answer**: Click "Generate Answer" to get a response from the AI.
 
-# Start PHP server
-php -S localhost:8000
+## 🛠️ Technologies Used
 
-# Open in browser
-open http://localhost:8000
-```
-
-### Option 2: Apache/Nginx
-Simply place the files in your web server's document root and access via browser.
-
-### Option 3: Online Demo
-Upload files to any web hosting service that supports PHP.
+-   **Frontend**: HTML, CSS, JavaScript, Tailwind CSS, Font Awesome
+-   **Backend**: PHP
+-   **AI**: Google Gemini API
 
 ## 📁 File Structure
 
 ```
-/app/
-├── index.html          # Main application interface
-├── style.css           # Modern styling and animations
-├── script.js           # Interactive functionality
-├── calculate.php       # CGPA calculation engine
-├── README.md           # This documentation
-└── server.php          # Optional PHP server script
-```
-
-## 🛠️ Technical Details
-
-### **Frontend Technologies**
-- **HTML5**: Semantic markup and accessibility
-- **CSS3**: Flexbox, Grid, animations, and responsive design
-- **JavaScript ES6+**: Modern syntax with async/await
-- **Font Awesome**: Beautiful icons throughout
-- **Google Fonts**: Professional typography
-
-### **Backend Technologies**
-- **PHP 7.4+**: Server-side calculations and validation
-- **JSON**: Data exchange format
-
-### **Key Features**
-- **No Database Required**: Stateless calculations
-- **Client-side Fallback**: Works even without PHP
-- **Input Validation**: Both frontend and backend validation
-- **Error Handling**: Comprehensive error management
-- **Accessibility**: WCAG compliant design
-
-## 🎮 How to Use
-
-### 1. **Add Your Courses**
-- Click "Add Course" to create new rows
-- Enter course name, credit hours (1-6), and select grade
-- Remove courses using the trash icon
-
-### 2. **Calculate CGPA**
-- Click "Calculate CGPA" to process your data
-- View detailed results in the beautiful modal popup
-- See course breakdown and statistics
-
-### 3. **Predict Target Class**
-- Enter your current CGPA and remaining credits
-- Select your target degree class
-- Get precise GPA requirements for remaining courses
-
-### 4. **View Reference Information**
-- Check the grading scale for grade point values
-- Review class classifications and requirements
-- Use as quick reference while planning
-
-## 🎨 Design Philosophy
-
-### **Student-Centric Design**
-- **Engaging Visuals**: Bright gradients and modern aesthetics appeal to young users
-- **Intuitive Interface**: No learning curve - students can start immediately
-- **Mobile-First**: Optimized for smartphone usage patterns
-- **Gamification Elements**: Achievement-style displays make results exciting
-
-### **Visual Hierarchy**
-- **Color Psychology**: Different colors for different grade ranges
-- **Progressive Disclosure**: Information revealed when needed
-- **Visual Feedback**: Immediate response to user actions
-- **Accessibility**: High contrast and readable fonts
-
-## 🔧 Customization
-
-### **Modify Grading Scale**
-Edit the `$gradeValues` array in `calculate.php`:
-```php
-$gradeValues = [
-    'A' => 4.0,
-    'B+' => 3.5,
-    // ... add your custom grades
-];
-```
-
-### **Update Class Classifications**
-Modify the `getClassification()` function in `calculate.php`:
-```php
-function getClassification($cgpa) {
-    if ($cgpa >= 3.6) {
-        return ['name' => 'First Class', ...];
-    }
-    // ... your custom classifications
-}
-```
-
-### **Styling Changes**
-All styles are in `style.css`. Key variables:
-- Primary gradient: `#667eea` to `#764ba2`
-- Accent colors: Various for different elements
-- Border radius: `20px` for cards, `8px` for inputs
-
-## 🧪 Testing
-
-### **Manual Testing Checklist**
-- [ ] Add multiple courses with different grades
-- [ ] Remove courses (ensuring minimum one remains)
-- [ ] Submit form with invalid data
-- [ ] Test mobile responsiveness
-- [ ] Try target class predictor
-- [ ] Verify CGPA calculations manually
-
-### **Sample Test Data**
-| Course | Credits | Grade | Expected GP |
-|--------|---------|-------|-------------|
-| Math 101 | 3 | A | 12.0 |
-| Physics 201 | 4 | B+ | 14.0 |
-| Chemistry 105 | 3 | B | 9.0 |
-| **Total** | **10** | **-** | **35.0** |
-| **CGPA** | **-** | **-** | **3.50** |
-
-## 🐛 Troubleshooting
-
-### **Common Issues**
-
-**1. PHP Errors**
-- Ensure PHP 7.4+ is installed
-- Check error logs: `tail -f /var/log/apache2/error.log`
-- Verify file permissions
-
-**2. JavaScript Not Working**
-- Check browser console for errors
-- Ensure all files are in the same directory
-- Verify internet connection for CDN resources
-
-**3. Styling Issues**
-- Clear browser cache
-- Check if CSS file is loading properly
-- Verify font and icon CDN connections
-
-**4. Calculation Errors**
-- Verify grade values match UCC standards
-- Check input validation rules
-- Test with known CGPA calculations
-
-## 🚀 Deployment
-
-### **Web Hosting**
-1. Upload all files to your hosting provider
-2. Ensure PHP support is enabled
-3. Set proper file permissions (644 for files, 755 for directories)
-4. Test all functionality
-
-### **Local Development**
-1. Install PHP locally
-2. Use built-in server: `php -S localhost:8000`
-3. Or set up Apache/Nginx locally
-
-## 📈 Future Enhancements
-
-### **Potential Features**
-- [ ] **Save/Load Sessions**: Remember calculations
-- [ ] **PDF Export**: Generate transcript-style reports
-- [ ] **Grade Trend Analysis**: Track improvement over semesters
-- [ ] **Multi-Semester Support**: Calculate cumulative CGPA
-- [ ] **What-If Scenarios**: Test different grade combinations
-- [ ] **Dark Mode**: Alternative color scheme
-- [ ] **University Templates**: Support for other institutions
-
-### **Technical Improvements**
-- [ ] **Progressive Web App**: Offline functionality
-- [ ] **Database Integration**: Persistent storage
-- [ ] **API Endpoints**: RESTful services
-- [ ] **User Authentication**: Personal accounts
-- [ ] **Analytics**: Usage tracking and insights
-
-## 🤝 Contributing
-
-We welcome contributions! Here's how you can help:
-
-1. **Report Bugs**: Use GitHub issues for bug reports
-2. **Suggest Features**: Share ideas for improvements  
-3. **Submit Pull Requests**: Code contributions welcome
-4. **Improve Documentation**: Help make this README better
-5. **Test & Feedback**: Use the app and share experiences
-
-### **Development Setup**
-```bash
-git clone <repository-url>
-cd grade-target
-php -S localhost:8000
+/
+├── index.html          # Main application interface for the CGPA calculator
+├── tutor.html          # The AI Tutor interface
+├── style.css           # Shared styles for the application
+├── script.js           # JavaScript for the CGPA calculator
+├── tutor.js            # JavaScript for the AI Tutor
+├── calculate.php       # Handles CGPA calculations
+├── predict.php         # Handles class prediction
+├── server.php          # Handles AI Tutor requests
+└── README.md           # This documentation
 ```
 
 ## 📄 License
 
 This project is open source and available under the [MIT License](LICENSE).
-
-## 🙏 Acknowledgments
-
-- **University of Cape Coast**: For the grading system standards
-- **Font Awesome**: For beautiful icons
-- **Google Fonts**: For professional typography
-- **UCC Students**: For inspiration and feedback
-
----
-
-## 📞 Support
-
-Need help? Have questions?
-
-- 📧 **Email**: support@gradetarget.com
-- 🐛 **Issues**: GitHub Issues page
-- 💬 **Discussions**: GitHub Discussions
-- 📚 **Wiki**: Check the project wiki
-
----
-
-<div align="center">
-
-**Made with ❤️ for UCC Students**
-
-*Empowering academic excellence through beautiful, functional tools*
-
-[🌟 Star this project](https://github.com/your-repo) | [🐛 Report Bug](https://github.com/your-repo/issues) | [💡 Request Feature](https://github.com/your-repo/issues)
-
-</div>
