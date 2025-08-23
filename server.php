@@ -3,6 +3,8 @@
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
+require 'vendor/autoload.php';
+
 header('Content-Type: application/json');
 
 // Basic validation
@@ -23,10 +25,35 @@ if (isset($_FILES['contextFile']) && $_FILES['contextFile']['error'] === UPLOAD_
     $fileNameCmps = explode(".", $fileName);
     $fileExtension = strtolower(end($fileNameCmps));
 
-    if ($fileExtension === 'txt') {
-        $contextText = file_get_contents($fileTmpPath);
-    } else {
-        echo json_encode(['success' => false, 'error' => 'Invalid file type. Only .txt files are accepted.']);
+    $allowedExtensions = ['pdf', 'docx', 'txt'];
+
+    if (!in_array($fileExtension, $allowedExtensions)) {
+        echo json_encode(['success' => false, 'error' => 'Invalid file type. Only PDF, DOCX, and TXT files are accepted.']);
+        exit;
+    }
+
+    // Reading the file content
+    try {
+        if ($fileExtension === 'txt') {
+            $contextText = file_get_contents($fileTmpPath);
+        } elseif ($fileExtension === 'pdf') {
+            $parser = new \Smalot\PdfParser\Parser();
+            $pdf = $parser->parseFile($fileTmpPath);
+            $contextText = $pdf->getText();
+        } elseif ($fileExtension === 'docx') {
+            $phpWord = \PhpOffice\PhpWord\IOFactory::load($fileTmpPath);
+            $text = '';
+            foreach ($phpWord->getSections() as $section) {
+                foreach ($section->getElements() as $element) {
+                    if (method_exists($element, 'getText')) {
+                        $text .= $element->getText() . ' ';
+                    }
+                }
+            }
+            $contextText = $text;
+        }
+    } catch (Exception $e) {
+        echo json_encode(['success' => false, 'error' => 'Error processing file: ' . $e->getMessage()]);
         exit;
     }
 }
@@ -80,7 +107,7 @@ try {
 
     // Call the Gemini API
     $apiUrl = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=" . GEMINI_API_KEY;
-    $payload = json_encode(["contents" => [["role" => "user", "parts" => [["text" => $prompt]]]]]);
+    $payload = json_encode(["contents" => [[ "role" => "user", "parts" => [[ "text" => $prompt ]]]]]); 
     $retries = 0;
     $max_retries = 5;
     $delay = 1;
