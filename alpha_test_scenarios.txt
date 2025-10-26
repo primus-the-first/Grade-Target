@@ -1,0 +1,493 @@
+# Alpha Test Scenarios - Structured Validation Protocol
+
+Use these scenarios to systematically test your tutor across disciplines before bringing in external alpha testers.
+
+---
+
+## MATHEMATICS TEST SCENARIOS
+
+### Scenario M1: Basic Algebra - Procedural Error
+**Student Profile**: High school, understands concepts but makes calculation errors
+**Test Message**: "I'm trying to solve 2x + 5 = 13 but I keep getting x = 4"
+
+**Expected Tutor Behavior:**
+- ✓ Recognizes math context immediately
+- ✓ Doesn't immediately give answer
+- ✓ Asks diagnostic question: "Show me your steps"
+- ✓ Identifies where error occurred
+- ✓ Guides to self-correction with questions
+- ✓ Asks "Why" to check conceptual understanding
+- ✓ Provides similar problem to verify mastery
+
+**Red Flags:**
+- ✗ Just says "The answer is x = 4"
+- ✗ Solves it completely without student participation
+- ✗ Doesn't check understanding after correction
+- ✗ Uses overly complex explanation for simple error
+
+**Validation Questions:**
+- Did student discover their own error?
+- Would they be able to solve similar problems now?
+- Was scaffolding appropriate (not too much/little)?
+
+---
+
+### Scenario M2: Conceptual Understanding - Derivatives
+**Student Profile**: Calculus student, can do procedures but doesn't understand meaning
+**Test Message**: "What is a derivative?"
+
+**Expected Tutor Behavior:**
+- ✓ Doesn't just give formula definition
+- ✓ Starts with concrete example (slope, rate of change)
+- ✓ Uses multiple representations (graphical, numerical, conceptual)
+- ✓ Connects to real-world meaning
+- ✓ THEN introduces formal definition
+- ✓ Checks understanding: "In your own words..."
+- ✓ Moves to Apply level: "Find the derivative of..."
+
+**Red Flags:**
+- ✗ Starts with formal limit definition
+- ✗ Purely symbolic explanation
+- ✗ Doesn't connect to meaning
+- ✗ Stays at Remember/Understand level
+
+**Validation Questions:**
+- Can student explain what a derivative means, not just calculate it?
+- Did tutor use multiple representations?
+- Did conversation progress up Bloom's taxonomy?
+
+---
+
+### Scenario M3: Complete Confusion - Word Problem
+**Student Profile**: Struggling middle school student
+**Test Message**: "I don't understand this: 'John has 3 times as many apples as Mary. Together they have 24 apples. How many does each have?'"
+
+**Expected Tutor Behavior:**
+- ✓ Recognizes word problem anxiety
+- ✓ Breaks down step-by-step
+- ✓ "What do we know? What are we finding?"
+- ✓ Uses concrete numbers first: "If Mary had 1 apple, John would have..."
+- ✓ Builds to variable representation
+- ✓ Multiple scaffolding levels if needed
+- ✓ Encourages throughout
+
+**Red Flags:**
+- ✗ Jumps straight to equations
+- ✗ Assumes algebraic comfort
+- ✗ Doesn't simplify the problem first
+- ✗ Doesn't check for understanding at each step
+
+**Validation Questions:**
+- Did student feel supported, not overwhelmed?
+- Were steps small enough?
+- Can they now approach similar word problems?
+
+---
+
+## SCIENCE TEST SCENARIOS
+
+### Scenario S1: Common Misconception - Falling Objects
+**Student Profile**: High school physics, holds Aristotelian view
+**Test Message**: "Heavier objects fall faster than lighter ones, right?"
+
+**Expected Tutor Behavior:**
+- ✓ Recognizes common misconception immediately
+- ✓ Doesn't just say "wrong"
+- ✓ Validates intuition: "That makes sense from everyday experience"
+- ✓ Uses Socratic questions: "What if we drop hammer and feather on moon?"
+- ✓ Guides to cognitive conflict
+- ✓ Explains air resistance vs gravity
+- ✓ Builds correct mental model
+- ✓ Asks prediction questions to solidify
+
+**Red Flags:**
+- ✗ Just says "That's incorrect"
+- ✗ Doesn't address why the misconception exists
+- ✗ Gives formula without conceptual explanation
+- ✗ Doesn't use thought experiments
+
+**Validation Questions:**
+- Did student understand WHY they were wrong?
+- Do they have correct mental model now?
+- Can they explain it to someone else?
+
+---
+
+### Scenario S2: Abstract Process - Photosynthesis
+**Student Profile**: Biology student, memorized stages but doesn't understand process
+**Test Message**: "I memorized the light reaction and Calvin cycle but I don't really get photosynthesis"
+
+**Expected Tutor Behavior (Biology Module):**
+- ✓ Starts with function: "Why do plants need this?"
+- ✓ Big picture first: inputs → outputs
+- ✓ THEN breaks down process
+- ✓ Emphasizes causation: "which causes...", "leading to..."
+- ✓ Connects levels: "At molecular level... at cellular level..."
+- ✓ Uses structure-function: "Why in chloroplasts? Why that shape?"
+- ✓ Avoids pure memorization
+- ✓ Checks understanding with application questions
+
+**Red Flags:**
+- ✗ Just lists stages again
+- ✗ Pure vocabulary focus
+- ✗ Doesn't connect to purpose/function
+- ✗ Stays at Remember level
+
+**Validation Questions:**
+- Can student explain the process, not just list stages?
+- Do they understand the "why" not just "what"?
+- Did tutor emphasize process over memorization?
+
+---
+
+### Scenario S3: Complex System - Cellular Respiration
+**Student Profile**: Advanced biology, needs to understand interconnections
+**Test Message**: "How is cellular respiration different from photosynthesis?"
+
+**Expected Tutor Behavior:**
+- ✓ Recognizes Analyze-level question (Bloom's)
+- ✓ Compares inputs/outputs
+- ✓ Contrasts purposes
+- ✓ Shows they're complementary (systems thinking)
+- ✓ Uses energy flow perspective
+- ✓ Asks: "Why do we need both processes on Earth?"
+- ✓ Pushes to Evaluate: "Which is more important?"
+
+**Red Flags:**
+- ✗ Just describes each separately without comparison
+- ✗ Doesn't emphasize relationship
+- ✗ Stays at Understand level
+- ✗ Misses opportunity for systems thinking
+
+**Validation Questions:**
+- Did tutor operate at Analyze level appropriately?
+- Does student see the interconnection?
+- Was complexity managed well?
+
+---
+
+## PROGRAMMING TEST SCENARIOS
+
+### Scenario P1: Debugging - Syntax Error
+**Student Profile**: Beginner programmer, frustrated by errors
+**Test Message**: "My code doesn't work and I don't know why: 
+```python
+def add_numbers(a, b)
+    return a + b
+```"
+
+**Expected Tutor Behavior:**
+- ✓ Normalizes error: "Errors are normal, they're feedback"
+- ✓ Asks: "What error message are you seeing?"
+- ✓ Guides to systematic debugging
+- ✓ "Look at line 1 - what's missing at the end?"
+- ✓ Explains WHY colon is needed (Python syntax)
+- ✓ Doesn't just give corrected code
+- ✓ Teaches debugging process, not just fix
+
+**Red Flags:**
+- ✗ Just posts corrected code
+- ✗ Doesn't explain the error
+- ✗ Doesn't teach debugging approach
+- ✗ Makes student feel stupid for error
+
+**Validation Questions:**
+- Did student learn debugging process?
+- Will they be able to find similar errors themselves?
+- Did tutor build confidence, not shame?
+
+---
+
+### Scenario P2: Conceptual - Loops
+**Student Profile**: New to programming, confused by loops
+**Test Message**: "I don't understand how loops work"
+
+**Expected Tutor Behavior (Programming Module):**
+- ✓ Starts with concrete example (everyday life)
+- ✓ "Imagine you're washing dishes - you repeat until done"
+- ✓ Shows simple code example
+- ✓ Traces through execution: "First time: i=0... Second time: i=1..."
+- ✓ Has student predict next iteration
+- ✓ THEN introduces syntax
+- ✓ Provides simple coding exercise
+
+**Red Flags:**
+- ✗ Starts with syntax rules
+- ✗ Abstract explanation without examples
+- ✗ Doesn't trace through execution
+- ✗ No practice problem
+
+**Validation Questions:**
+- Can student explain loop concept in own words?
+- Can they trace through loop execution?
+- Did tutor use concrete before abstract?
+
+---
+
+### Scenario P3: Problem Solving - Algorithm Design
+**Student Profile**: Intermediate programmer, needs to design solution
+**Test Message**: "I need to write a function that finds the largest number in a list"
+
+**Expected Tutor Behavior:**
+- ✓ Doesn't give code immediately
+- ✓ "Before coding, what's your approach?"
+- ✓ Guides through problem decomposition
+- ✓ "How would you do this by hand?"
+- ✓ Helps with pseudocode first
+- ✓ THEN translates to code
+- ✓ Asks about edge cases: "What if list is empty?"
+
+**Red Flags:**
+- ✗ Posts complete solution immediately
+- ✗ Doesn't develop problem-solving process
+- ✗ Skips pseudocode/planning step
+- ✗ Doesn't check edge cases
+
+**Validation Questions:**
+- Did student develop problem-solving approach?
+- Can they apply this process to different problems?
+- Was computational thinking emphasized?
+
+---
+
+## HUMANITIES TEST SCENARIOS
+
+### Scenario H1: Literary Analysis - Poetry Interpretation
+**Student Profile**: High school English, needs to analyze poem
+**Test Message**: "What does this poem mean? [posts poem]"
+
+**Expected Tutor Behavior (Humanities Module):**
+- ✓ Doesn't give single interpretation
+- ✓ "There are multiple valid readings. What's yours?"
+- ✓ Asks: "What lines stand out to you?"
+- ✓ Close reading: "What do you notice about the language here?"
+- ✓ "What evidence supports your interpretation?"
+- ✓ Introduces alternative reading: "Some might also see..."
+- ✓ Builds argument structure: claim + evidence
+
+**Red Flags:**
+- ✗ Gives definitive "the meaning is..."
+- ✗ Doesn't ask for student's interpretation first
+- ✗ Doesn't require textual evidence
+- ✗ Doesn't acknowledge multiple valid readings
+
+**Validation Questions:**
+- Can student support interpretation with evidence?
+- Do they understand multiple readings are valid?
+- Did tutor build analytical skills, not just explain?
+
+---
+
+### Scenario H2: Historical Analysis - Causation
+**Student Profile**: College history student
+**Test Message**: "Why did World War 1 start?"
+
+**Expected Tutor Behavior:**
+- ✓ Doesn't give simple answer
+- ✓ Emphasizes multiple causes (historical thinking)
+- ✓ "What do you already know about tensions in Europe?"
+- ✓ Distinguishes immediate trigger vs long-term causes
+- ✓ Introduces different historical interpretations
+- ✓ Asks about sourcing: "Different historians emphasize different factors"
+- ✓ Pushes to Analyze: "How did these factors interact?"
+
+**Red Flags:**
+- ✗ Single-cause explanation
+- ✗ Just lists facts
+- ✗ Doesn't develop historical thinking skills
+- ✗ Presents one interpretation as THE truth
+
+**Validation Questions:**
+- Does student understand complexity of historical causation?
+- Can they think like a historian (multiple perspectives)?
+- Did tutor avoid oversimplification?
+
+---
+
+### Scenario H3: Argument Evaluation - Essay Thesis
+**Student Profile**: Student writing persuasive essay
+**Test Message**: "Is this a good thesis: 'Social media is bad for society'"
+
+**Expected Tutor Behavior:**
+- ✓ Evaluates the thesis structure
+- ✓ "What makes a strong thesis?"
+- ✓ Points out vagueness: "What do you mean by 'bad'?"
+- ✓ Guides to specificity: "Bad in what ways specifically?"
+- ✓ Helps refine: "What's your specific claim?"
+- ✓ Discusses arguability and evidence
+- ✓ Builds better version with student
+
+**Red Flags:**
+- ✗ Just says "yes" or "no"
+- ✗ Rewrites thesis for them
+- ✗ Doesn't explain what makes thesis strong/weak
+- ✗ Doesn't develop argumentation skills
+
+**Validation Questions:**
+- Did student learn what makes a good thesis?
+- Can they now evaluate and improve their own theses?
+- Did tutor develop critical thinking about argument?
+
+---
+
+## LANGUAGE LEARNING TEST SCENARIOS
+
+### Scenario L1: Grammar Question - Spanish Conjugation
+**Student Profile**: Spanish learner, confused by verb forms
+**Test Message**: "When do I use 'ser' vs 'estar'?"
+
+**Expected Tutor Behavior (Language Module):**
+- ✓ Starts with examples, not rules
+- ✓ Shows multiple sentences with each
+- ✓ "What pattern do you notice?"
+- ✓ Guides to discover rule
+- ✓ Explains: permanent/identity vs temporary/condition
+- ✓ Provides practice: "How would you say..."
+- ✓ Normalizes confusion: "This is hard even for advanced learners"
+
+**Red Flags:**
+- ✗ Just states rule abstractly
+- ✗ No examples or practice
+- ✗ Doesn't let student discover pattern
+- ✗ Too many rules at once
+
+**Validation Questions:**
+- Can student apply the rule in new sentences?
+- Did pattern recognition happen?
+- Was practice integrated?
+
+---
+
+### Scenario L2: Production - Fear of Speaking
+**Student Profile**: French learner, knows words but afraid to make mistakes
+**Test Message**: "I want to say 'I went to the store yesterday' in French but I'm not sure"
+
+**Expected Tutor Behavior:**
+- ✓ Encourages attempt: "Try it! Don't worry about mistakes"
+- ✓ After attempt, positive recast: "Great effort! We say [correct version]"
+- ✓ Doesn't over-correct
+- ✓ Builds confidence: "You had the right idea"
+- ✓ Provides similar practice opportunities
+- ✓ Emphasizes communication over perfection
+
+**Red Flags:**
+- ✗ Just gives answer without attempt
+- ✗ Over-corrects every error
+- ✗ Makes them feel bad about mistakes
+- ✗ Focuses on grammar over communication
+
+**Validation Questions:**
+- Did student feel encouraged to try?
+- Was error correction balanced with encouragement?
+- Would they be more willing to speak now?
+
+---
+
+## CROSS-SCENARIO VALIDATION
+
+### Test These Across ALL Subjects:
+
+**Scenario X1: Student Asks for Direct Answer**
+Message: "Just tell me the answer, I don't have time"
+
+**Expected:** Tutor refuses but offers efficient guidance
+**Test:** Does tutor maintain learning focus vs convenience?
+
+---
+
+**Scenario X2: Student is Frustrated**
+Message: "This is too hard, I give up"
+
+**Expected:** Empathy + simplification + encouragement
+**Test:** Does tutor adjust difficulty appropriately?
+
+---
+
+**Scenario X3: Student Shows Mastery**
+Message: [Correctly solves advanced problem]
+
+**Expected:** Acknowledges mastery + challenges with harder problem
+**Test:** Does tutor push to next Bloom's level?
+
+---
+
+**Scenario X4: Vague/Incomplete Question**
+Message: "I don't get #5"
+
+**Expected:** Asks for clarification, problem details
+**Test:** Does tutor handle ambiguity well?
+
+---
+
+**Scenario X5: Wrong Subject Detection**
+Message: "The cell cycle has 4 phases" (Biology, might detect as Math if says "4")
+
+**Expected:** Correctly identifies as Biology
+**Test:** Subject detection accuracy
+
+---
+
+## TESTING PROTOCOL
+
+### For Each Scenario:
+
+1. **Run the conversation**
+2. **Record actual tutor behavior**
+3. **Compare to expected behavior**
+4. **Note deviations** (good and bad)
+5. **Score** on key dimensions:
+   - Subject detection accuracy
+   - Teaching strategy appropriateness
+   - Bloom's level progression
+   - Scaffolding quality
+   - Tone and encouragement
+   - Learning outcome potential
+
+### Scoring Rubric (1-5 scale):
+
+**5 - Excellent:** Exceeds expectations, exemplary teaching
+**4 - Good:** Meets expectations, effective teaching
+**3 - Adequate:** Acceptable but room for improvement
+**2 - Poor:** Missing key elements, needs work
+**1 - Failing:** Doesn't work, wrong approach
+
+### Red Flag Tracker:
+
+Count instances of:
+- ❌ Giving direct answers without guiding
+- ❌ Using inappropriate teaching strategy for subject
+- ❌ Not detecting subject correctly
+- ❌ Staying at low Bloom's levels
+- ❌ Over-scaffolding or under-scaffolding
+- ❌ Robotic or unnatural tone
+- ❌ Not checking understanding
+- ❌ Missing opportunities to develop thinking
+
+---
+
+## ITERATION PROCESS
+
+After testing all scenarios:
+
+1. **Identify patterns** in failures/successes
+2. **Prioritize fixes** (high-impact, common issues)
+3. **Update prompts** based on learnings
+4. **Re-test problem scenarios**
+5. **Repeat until** all scenarios score 4+ consistently
+
+**Only THEN are you ready for alpha testing with real users.**
+
+---
+
+## SUCCESS CRITERIA FOR ALPHA READINESS
+
+✅ 90%+ subject detection accuracy across scenarios
+✅ All scenarios score 4+ on teaching quality
+✅ No red flags in >80% of scenarios
+✅ Clear Bloom's progression visible
+✅ Appropriate scaffolding for different levels
+✅ Natural, encouraging tone maintained
+✅ Discipline-specific strategies clearly working
+✅ You can confidently demo to alpha testers
+
+If you hit these criteria, you're ready for external alpha testing.

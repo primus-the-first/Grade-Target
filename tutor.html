@@ -7,94 +7,97 @@
     <!-- Tailwind CSS CDN for modern styling -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Font Awesome for icons -->
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Outfit font for clean and modern typography -->
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
+    <!-- Add this to the <head> of your tutor.html file -->
+    <script>
+      MathJax = {
+        tex: {
+          inlineMath: [['\\(', '\\)'], ['$', '$']],
+          displayMath: [['\\[', '\\]'], ['$$', '$$']]
+        },
+        chtml: {
+          fontCache: 'global'
+        }
+      };
+    </script>
+    <script type="text/javascript" id="MathJax-script" async
+      src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js">
+    </script>
 </head>
-<body class="bg-gray-100 min-h-screen flex flex-col items-center py-8">
-    <div class="container mx-auto bg-white shadow-xl rounded-xl overflow-hidden">
+<body class="bg-gray-100 flex h-screen">
+    <!-- Sidebar -->
+    <aside id="sidebar" class="fixed inset-y-0 left-0 z-30 w-64 bg-gray-800 text-white flex flex-col transform -translate-x-full md:relative md:translate-x-0 transition-transform duration-300 ease-in-out">
+        <div class="p-4 border-b border-gray-700">
+            <button id="newChatBtn" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded">
+                <i class="fas fa-plus mr-2"></i> New Chat
+            </button>
+        </div>
+        <nav id="chat-history-container" class="flex-1 p-4 space-y-2 overflow-y-auto" onclick="document.getElementById('sidebar').classList.remove('open'); document.getElementById('sidebar-overlay').classList.add('hidden');">
+            <!-- Chat history links will be populated here -->
+        </nav>
+    </aside>
+
+    <!-- Overlay for mobile sidebar -->
+    <div id="sidebar-overlay" class="sidebar-overlay fixed inset-0 bg-black bg-opacity-50 z-20 hidden md:hidden"></div>
+
+    <div class="container mx-auto bg-white shadow-xl rounded-xl flex flex-col h-full overflow-hidden flex-1">
         <!-- Header Section -->
         <header class="header bg-white rounded-t-xl">
-            <div class="header-content p-8 text-center">
-                <div class="logo flex items-center justify-center text-indigo-600 mb-3">
-                    <i class="fas fa-robot text-5xl mr-4"></i>
-                    <h1 class="text-4xl font-bold">AI Tutor</h1>
+            <div class="header-content p-4 border-b flex items-center justify-between">
+                <!-- Hamburger Menu for mobile -->
+                <button id="menu-toggle" class="md:hidden text-gray-600 hover:text-indigo-600 p-2 rounded-md">
+                    <i class="fas fa-bars text-2xl"></i>
+                </button>
+                <div class="logo flex items-center justify-center text-indigo-600 flex-grow">
+                    <i class="fas fa-robot text-3xl mr-3"></i>
+                    <h1 class="text-2xl font-bold">AI Tutor</h1>
                 </div>
-                <p class="subtitle text-gray-600 text-xl">Your interactive study assistant</p>
+                <!-- Spacer to keep title centered on mobile -->
+                <div class="w-8 md:hidden"></div>
             </div>
-            <div class="header-decoration"></div>
         </header>
 
+        <!-- Chat Title Display -->
+        <div id="chat-title-display" class="p-3 text-center text-gray-500 font-semibold border-b">New Chat</div>
+
         <!-- Main Content -->
-        <main class="main-content p-8 space-y-10">
-            <!-- AI Tutor Section -->
-            <section class="card bg-white p-6 rounded-lg shadow-md">
-                <div class="section-header mb-8 text-center">
-                    <h2 class="text-3xl font-semibold text-gray-800 mb-3"><i class="fas fa-question-circle text-indigo-500 mr-3"></i> Ask the AI Tutor</h2>
-                    <p class="text-gray-600 text-lg">Get help with your study questions</p>
-                </div>
-
-                <form id="tutorForm" class="space-y-6">
-                    <div class="input-group">
-                        <label for="question" class="block text-gray-700 text-base font-medium mb-2">Your Question</label>
-                        <textarea id="question" name="question" rows="4" class="form-input block w-full" placeholder="e.g., Explain the process of photosynthesis."></textarea>
-                    </div>
-
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                        <div class="input-group">
-                            <label for="learningLevel" class="block text-gray-700 text-base font-medium mb-2">Learning Level (Bloom's Taxonomy)</label>
-                            <select id="learningLevel" name="learningLevel" class="form-select block w-full">
-                                <option value="Remembering">Remembering</option>
-                                <option value="Understanding">Understanding</option>
-                                <option value="Applying">Applying</option>
-                                <option value="Analyzing">Analyzing</option>
-                                <option value="Evaluating">Evaluating</option>
-                                <option value="Creating">Creating</option>
-                            </select>
-                        </div>
-
-                        <div class="input-group">
-                            <label for="contextFile" class="block text-gray-700 text-base font-medium mb-2">Context File (Optional)</label>
-                            <input type="file" id="contextFile" name="contextFile" class="form-input block w-full" accept=".txt">
-                        </div>
-                    </div>
-
-                    <div class="form-actions flex justify-center mt-8">
-                        <button type="submit" class="btn btn-primary px-10 py-4 text-white font-bold text-xl rounded-full shadow-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-opacity-75 transform transition-transform duration-200 hover:scale-105">
-                            <i class="fas fa-lightbulb mr-3"></i> Generate Answer
-                        </button>
-                    </div>
-                </form>
-            </section>
-
-            <!-- Answer Section -->
-            <section id="answerSection" class="card bg-white p-6 rounded-lg shadow-md hidden">
-                <div class="section-header mb-8 text-center">
-                    <h2 class="text-3xl font-semibold text-gray-800 mb-3"><i class="fas fa-graduation-cap text-indigo-500 mr-3"></i> AI's Response</h2>
-                </div>
-                <div id="answer" class="text-gray-700 text-lg space-y-4">
-                    <!-- AI's response will be displayed here -->
-                </div>
-            </section>
+        <main id="chat-container" class="chat-messages flex-1 p-4 overflow-y-auto">
+            <!-- Chat messages will be appended here -->
         </main>
+
+        <!-- Footer with chat input -->
+        <footer class="p-4 bg-white border-t chat-input-area">
+            <div id="attachment-preview-area"></div> <!-- To show selected file -->
+            <form id="tutorForm" class="flex items-center gap-4">
+                <input type="hidden" id="conversation_id" name="conversation_id" value="">
+
+                <!-- File Upload Button -->
+                <label for="file-attachment" class="file-input-label" title="Attach file">
+                    <i class="fas fa-paperclip"></i>
+                </label>
+                <input type="file" id="file-attachment" name="attachment" accept=".txt,.pdf,.docx,.pptx,.jpg,.jpeg,.png,.gif,.bmp,.webp">
+
+                <input type="text" id="question" name="question" class="form-input flex-1" placeholder="Ask about your file or anything else..." required>
+                
+                <select id="learningLevel" name="learningLevel" class="form-select">
+                    <option value="Remember">Remember</option>
+                    <option value="Understand" selected>Understand</option>
+                    <option value="Apply">Apply</option>
+                    <option value="Analyze">Analyze</option>
+                    <option value="Evaluate">Evaluate</option>
+                    <option value="Create">Create</option>
+                </select>
+
+                <button type="submit" id="ai-submit-btn" class="btn btn-primary px-6 py-2 text-white font-semibold rounded-lg shadow-md">
+                    <i class="fas fa-paper-plane"></i> Send
+                </button>
+            </form>
+        </footer>
     </div>
 
     <script src="tutor.js"></script>
-    <!-- The Modal for error messages -->
-    <div id="errorModal" class="modal fixed inset-0 flex items-center justify-center p-4 z-50 hidden">
-        <div class="modal-content w-full max-w-xl mx-auto p-6 relative">
-            <button class="modal-close absolute top-4 right-6 text-white text-3xl leading-none">&times;</button>
-            <div class="modal-header text-center p-6 mb-6">
-                <h3 id="modalTitle" class="text-3xl font-bold text-white">Error</h3>
-            </div>
-            <div id="modalBody" class="p-6 text-gray-700 text-lg space-y-4">
-                <!-- Error message will be injected here -->
-            </div>
-            <div class="flex justify-center p-6">
-                <button class="btn-primary px-6 py-2 text-white font-semibold rounded-lg shadow-md" onclick="document.getElementById('errorModal').classList.add('hidden')">Close</button>
-            </div>
-        </div>
-    </div>
 </body>
 </html>
